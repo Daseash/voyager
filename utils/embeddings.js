@@ -1,7 +1,12 @@
 const { pipeline, env } = require('@xenova/transformers');
 
-// Keep the (free, local) model cache inside the project so it persists reliably.
-env.cacheDir = require('path').join(__dirname, '..', '.cache', 'transformers');
+const os = require('os');
+const path = require('path');
+
+// Keep the model cache inside the project locally, or in /tmp on serverless environments (e.g. Vercel)
+env.cacheDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), '.cache', 'transformers')
+  : path.join(__dirname, '..', '.cache', 'transformers');
 
 let embedder;
 let warmPromise = null;

@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Skiper 5: "Things Drag and Scroll" Styles
+   Fluid horizontal physics scroller with momentum, grab cursors, and navigation.
+   ========================================================================== */
+
+/* Outer relative container that houses the scroller and floating navigation buttons */
+.skiper-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 1.5rem 0 2rem;
+  padding: 0;
+}
+
+/* The horizontal physics track */
+.skiper-scroll,
+.categories-scroll {
+  display: flex !important;
+  gap: 1.25rem;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: auto; /* Managed by JS physics for instant drag response */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important;  /* IE / Edge */
+  padding: 0.5rem 0.25rem 1rem !important;
+  position: relative;
+  touch-action: pan-y pinch-zoom;
+}
+
+.skiper-scroll::-webkit-scrollbar,
+.categories-scroll::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Grabbing state during active pointer drag */
+.skiper-scroll.is-grabbing,
+.categories-scroll.is-grabbing {
+  cursor: grabbing !important;
+  cursor: -webkit-grabbing !important;
+  scroll-behavior: auto !important;
+}
+
+/* Prevent text selection and cursor jitter while dragging across page */
+body.skiper-active-dragging {
+  cursor: grabbing !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+body.skiper-active-dragging a,
+body.skiper-active-dragging button {
+  pointer-events: none !important;
+}
+
+/* Individual items inside a Skiper 5 scroll track */
+.skiper-item,
+.skiper-scroll .listing-card {
+  flex: 0 0 300px;
+  max-width: 320px;
+  transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.28s ease;
+  will-change: transform;
+}
+
+/* Tactile press response when grab is held */
+.skiper-scroll.is-grabbing .skiper-item,
+.skiper-scroll.is-grabbing .listing-card {
+  transform: scale(0.985);
+  transition: transform 0.1s ease-out;
+}
+
+/* Smooth hover elevation when not dragging */
+.skiper-scroll:not(.is-grabbing) .skiper-item:hover,
+.skiper-scroll:not(.is-grabbing) .listing-card:hover {
+  transform: translateY(-4px) scale(1.015);
+}
+
+/* Floating Navigation Arrows */
+.skiper-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #222222;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 1;
+  visibility: visible;
+  outline: none;
+}
+
+.skiper-arrow:hover {
+  background: #ffffff;
+  color: #ff385c;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.skiper-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.skiper-arrow.skiper-prev {
+  left: -16px;
+}
+
+.skiper-arrow.skiper-next {
+  right: -16px;
+}
+
+.skiper-arrow.is-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(-50%) scale(0.85);
+}
+
+/* Subtle edge fade overlays */
+.skiper-scroll-wrapper::before,
+.skiper-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 1rem;
+  width: 36px;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.25s ease;
+}
+
+.skiper-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.95), transparent);
+}
+
+.skiper-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
+}
+
+/* Category pills drag-and-scroll refinement */
+.categories.skiper-scroll-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.categories.skiper-scroll-wrapper .categories-scroll {
+  padding: 0.5rem 0.25rem !important;
+}
+
+.categories-scroll .category-pill {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.categories-scroll.is-grabbing .category-pill {
+  cursor: grabbing !important;
+  transform: scale(0.97);
+}
+
+/* Dark / Pixel mode styling */
+[data-theme="pixel"] .skiper-arrow {
+  background: #1e293b !important;
+  color: #00d2ff !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="pixel"] .skiper-arrow:hover {
+  background: #0f172a !important;
+  color: #ff0055 !important;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.6) !important;
+}
+
+[data-theme="pixel"] .skiper-scroll-wrapper::before {
+  background: linear-gradient(to right, rgba(15, 23, 42, 0.95), transparent);
+}
+
+[data-theme="pixel"] .skiper-scroll-wrapper::after {
+  background: linear-gradient(to left, rgba(15, 23, 42, 0.95), transparent);
+}
+
+@media (max-width: 768px) {
+  .skiper-arrow {
+    display: none !important; /* Touch swipe on mobile */
+  }
+  .skiper-scroll-wrapper::before,
+  .skiper-scroll-wrapper::after {
+    display: none !important;
+  }
+  .skiper-item,
+  .skiper-scroll .listing-card {
+    flex: 0 0 260px;
+    max-width: 270px;
+  }
+}

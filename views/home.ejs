@@ -55,47 +55,55 @@
             <a class="link-arrow" href="/listings?category=beach">Explore beachfront <i class="fa-solid fa-arrow-right"></i></a>
           </div>
 
-          <div class="listing-grid">
-            <% beachListings.forEach((listing)=> { %>
-              <div class="listing-card">
-                <a href="/listings/<%= listing._id %>" class="card-link">
-                  <div class="card-media">
-                    <img
-                      src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=60') %>"
-                      alt="<%= listing.title %>" loading="lazy" />
-                    <span class="card-badge">🏖️ Beachfront</span>
-                  </div>
-                  <div class="card-body">
-                    <div class="card-row">
-                      <h3 class="card-title">
-                        <%= listing.location %>, <%= listing.country %>
-                      </h3>
-                      <% if (listing._avgRating) { %>
-                        <span class="card-rating"><i class="fa-solid fa-star"></i>
-                          <%= listing._avgRating.toFixed(1) %>
-                        </span>
-                        <% } else { %>
-                          <span class="card-rating card-rating--new">New</span>
-                          <% } %>
+          <div class="skiper-scroll-wrapper">
+            <button class="skiper-arrow skiper-prev is-hidden" type="button" aria-label="Previous beachfront stays">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="skiper-scroll" data-skiper-scroll>
+              <% beachListings.forEach((listing)=> { %>
+                <div class="listing-card">
+                  <a href="/listings/<%= listing._id %>" class="card-link">
+                    <div class="card-media">
+                      <img
+                        src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=60') %>"
+                        alt="<%= listing.title %>" loading="lazy" />
+                      <span class="card-badge">🏖️ Beachfront</span>
                     </div>
-                    <p class="card-subtitle">
-                      <%= listing.title %>
-                    </p>
-                    <p class="card-price">
-                      &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
-                    </p>
-                  </div>
-                </a>
-                <% if (typeof currentUser !=='undefined' && currentUser) { %>
-                  <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                    <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
-                      <i class="fa-regular fa-heart"></i>
-                    </button>
-                  </form>
-                  <% } %>
-              </div>
-              <% }); %>
+                    <div class="card-body">
+                      <div class="card-row">
+                        <h3 class="card-title">
+                          <%= listing.location %>, <%= listing.country %>
+                        </h3>
+                        <% if (listing._avgRating) { %>
+                          <span class="card-rating"><i class="fa-solid fa-star"></i>
+                            <%= listing._avgRating.toFixed(1) %>
+                          </span>
+                          <% } else { %>
+                            <span class="card-rating card-rating--new">New</span>
+                            <% } %>
+                      </div>
+                      <p class="card-subtitle">
+                        <%= listing.title %>
+                      </p>
+                      <p class="card-price">
+                        &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                      </p>
+                    </div>
+                  </a>
+                  <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                    <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                        <i class="fa-regular fa-heart"></i>
+                      </button>
+                    </form>
+                    <% } %>
+                </div>
+                <% }); %>
+            </div>
+            <button class="skiper-arrow skiper-next" type="button" aria-label="Next beachfront stays">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
           </div>
         </section>
         <% } %>
@@ -110,47 +118,55 @@
                 <a class="link-arrow" href="/listings?category=amazing-views">Explore mountain stays <i class="fa-solid fa-arrow-right"></i></a>
               </div>
 
-              <div class="listing-grid">
-                <% viewListings.forEach((listing)=> { %>
-                  <div class="listing-card">
-                    <a href="/listings/<%= listing._id %>" class="card-link">
-                      <div class="card-media">
-                        <img
-                          src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=60') %>"
-                          alt="<%= listing.title %>" loading="lazy" />
-                        <span class="card-badge">🌄 Amazing View</span>
-                      </div>
-                      <div class="card-body">
-                        <div class="card-row">
-                          <h3 class="card-title">
-                            <%= listing.location %>, <%= listing.country %>
-                          </h3>
-                          <% if (listing._avgRating) { %>
-                            <span class="card-rating"><i class="fa-solid fa-star"></i>
-                              <%= listing._avgRating.toFixed(1) %>
-                            </span>
-                            <% } else { %>
-                              <span class="card-rating card-rating--new">New</span>
-                              <% } %>
+              <div class="skiper-scroll-wrapper">
+                <button class="skiper-arrow skiper-prev is-hidden" type="button" aria-label="Previous mountain stays">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="skiper-scroll" data-skiper-scroll>
+                  <% viewListings.forEach((listing)=> { %>
+                    <div class="listing-card">
+                      <a href="/listings/<%= listing._id %>" class="card-link">
+                        <div class="card-media">
+                          <img
+                            src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=60') %>"
+                            alt="<%= listing.title %>" loading="lazy" />
+                          <span class="card-badge">🌄 Amazing View</span>
                         </div>
-                        <p class="card-subtitle">
-                          <%= listing.title %>
-                        </p>
-                        <p class="card-price">
-                          &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
-                        </p>
-                      </div>
-                    </a>
-                    <% if (typeof currentUser !=='undefined' && currentUser) { %>
-                      <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                        <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
-                          <i class="fa-regular fa-heart"></i>
-                        </button>
-                      </form>
-                      <% } %>
-                  </div>
-                  <% }); %>
+                        <div class="card-body">
+                          <div class="card-row">
+                            <h3 class="card-title">
+                              <%= listing.location %>, <%= listing.country %>
+                            </h3>
+                            <% if (listing._avgRating) { %>
+                              <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                <%= listing._avgRating.toFixed(1) %>
+                              </span>
+                              <% } else { %>
+                                <span class="card-rating card-rating--new">New</span>
+                                <% } %>
+                          </div>
+                          <p class="card-subtitle">
+                            <%= listing.title %>
+                          </p>
+                          <p class="card-price">
+                            &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                          </p>
+                        </div>
+                      </a>
+                      <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                        <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                          <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                          </button>
+                        </form>
+                        <% } %>
+                    </div>
+                    <% }); %>
+                </div>
+                <button class="skiper-arrow skiper-next" type="button" aria-label="Next mountain stays">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
             </section>
             <% } %>
@@ -165,50 +181,70 @@
                     <a class="link-arrow" href="/listings?category=trending">Explore trending <i class="fa-solid fa-arrow-right"></i></a>
                   </div>
 
-                  <div class="listing-grid">
-                    <% trendingListings.forEach((listing)=> { %>
-                      <div class="listing-card">
-                        <a href="/listings/<%= listing._id %>" class="card-link">
-                          <div class="card-media">
-                            <img
-                              src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
-                              alt="<%= listing.title %>" loading="lazy" />
-                            <span class="card-badge">🔥 Trending</span>
-                          </div>
-                          <div class="card-body">
-                            <div class="card-row">
-                              <h3 class="card-title">
-                                <%= listing.location %>, <%= listing.country %>
-                              </h3>
-                              <% if (listing._avgRating) { %>
-                                <span class="card-rating"><i class="fa-solid fa-star"></i>
-                                  <%= listing._avgRating.toFixed(1) %>
-                                </span>
-                                <% } else { %>
-                                  <span class="card-rating card-rating--new">New</span>
-                                  <% } %>
+                  <div class="skiper-scroll-wrapper">
+                    <button class="skiper-arrow skiper-prev is-hidden" type="button" aria-label="Previous trending stays">
+                      <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="skiper-scroll" data-skiper-scroll>
+                      <% trendingListings.forEach((listing)=> { %>
+                        <div class="listing-card">
+                          <a href="/listings/<%= listing._id %>" class="card-link">
+                            <div class="card-media">
+                              <img
+                                src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
+                                alt="<%= listing.title %>" loading="lazy" />
+                              <span class="card-badge">🔥 Trending</span>
                             </div>
-                            <p class="card-subtitle">
-                              <%= listing.title %>
-                            </p>
-                            <p class="card-price">
-                              &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
-                            </p>
-                          </div>
-                        </a>
-                        <% if (typeof currentUser !=='undefined' && currentUser) { %>
-                          <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
-                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                            <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
-                              <i class="fa-regular fa-heart"></i>
-                            </button>
-                          </form>
-                          <% } %>
-                      </div>
-                      <% }); %>
+                            <div class="card-body">
+                              <div class="card-row">
+                                <h3 class="card-title">
+                                  <%= listing.location %>, <%= listing.country %>
+                                </h3>
+                                <% if (listing._avgRating) { %>
+                                  <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                    <%= listing._avgRating.toFixed(1) %>
+                                  </span>
+                                  <% } else { %>
+                                    <span class="card-rating card-rating--new">New</span>
+                                    <% } %>
+                              </div>
+                              <p class="card-subtitle">
+                                <%= listing.title %>
+                              </p>
+                              <p class="card-price">
+                                &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                              </p>
+                            </div>
+                          </a>
+                          <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                            <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                              <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                <i class="fa-regular fa-heart"></i>
+                              </button>
+                            </form>
+                            <% } %>
+                        </div>
+                        <% }); %>
+                    </div>
+                    <button class="skiper-arrow skiper-next" type="button" aria-label="Next trending stays">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                   </div>
                 </section>
                 <% } %>
+
+                <section class="container-xl pt-5">
+                  <div class="section-row">
+                    <div>
+                      <h2 class="section-title"><span class="me-2">✨</span>Explore Stays Worldwide</h2>
+                      <p>Drag in any direction to explore curated homes and villas seamlessly.</p>
+                    </div>
+                    <a class="link-arrow" href="/listings">View all stays <i class="fa-solid fa-arrow-right"></i></a>
+                  </div>
+
+                  <%- include('includes/infiniteCanvas') %>
+                </section>
 
                   <% if (typeof lakeListings !=='undefined' && lakeListings && lakeListings.length> 0) { %>
                     <section class="container-xl pt-5">
@@ -220,47 +256,55 @@
                         <a class="link-arrow" href="/listings?category=lake">Explore lakefront <i class="fa-solid fa-arrow-right"></i></a>
                       </div>
 
-                      <div class="listing-grid">
-                        <% lakeListings.forEach((listing)=> { %>
-                          <div class="listing-card">
-                            <a href="/listings/<%= listing._id %>" class="card-link">
-                              <div class="card-media">
-                                <img
-                                  src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1578645510447-e20b4311e3ce?auto=format&fit=crop&w=800&q=60') %>"
-                                  alt="<%= listing.title %>" loading="lazy" />
-                                <span class="card-badge">⛵ Lakefront</span>
-                              </div>
-                              <div class="card-body">
-                                <div class="card-row">
-                                  <h3 class="card-title">
-                                    <%= listing.location %>, <%= listing.country %>
-                                  </h3>
-                                  <% if (listing._avgRating) { %>
-                                    <span class="card-rating"><i class="fa-solid fa-star"></i>
-                                      <%= listing._avgRating.toFixed(1) %>
-                                    </span>
-                                    <% } else { %>
-                                      <span class="card-rating card-rating--new">New</span>
-                                      <% } %>
+                      <div class="skiper-scroll-wrapper">
+                        <button class="skiper-arrow skiper-prev is-hidden" type="button" aria-label="Previous lakefront stays">
+                          <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div class="skiper-scroll" data-skiper-scroll>
+                          <% lakeListings.forEach((listing)=> { %>
+                            <div class="listing-card">
+                              <a href="/listings/<%= listing._id %>" class="card-link">
+                                <div class="card-media">
+                                  <img
+                                    src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1578645510447-e20b4311e3ce?auto=format&fit=crop&w=800&q=60') %>"
+                                    alt="<%= listing.title %>" loading="lazy" />
+                                  <span class="card-badge">⛵ Lakefront</span>
                                 </div>
-                                <p class="card-subtitle">
-                                  <%= listing.title %>
-                                </p>
-                                <p class="card-price">
-                                  &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
-                                </p>
-                              </div>
-                            </a>
-                            <% if (typeof currentUser !=='undefined' && currentUser) { %>
-                              <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                                <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
-                                  <i class="fa-regular fa-heart"></i>
-                                </button>
-                              </form>
-                              <% } %>
-                          </div>
-                          <% }); %>
+                                <div class="card-body">
+                                  <div class="card-row">
+                                    <h3 class="card-title">
+                                      <%= listing.location %>, <%= listing.country %>
+                                    </h3>
+                                    <% if (listing._avgRating) { %>
+                                      <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                        <%= listing._avgRating.toFixed(1) %>
+                                      </span>
+                                      <% } else { %>
+                                        <span class="card-rating card-rating--new">New</span>
+                                        <% } %>
+                                  </div>
+                                  <p class="card-subtitle">
+                                    <%= listing.title %>
+                                  </p>
+                                  <p class="card-price">
+                                    &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                                  </p>
+                                </div>
+                              </a>
+                              <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                  <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                    <i class="fa-regular fa-heart"></i>
+                                  </button>
+                                </form>
+                                <% } %>
+                            </div>
+                            <% }); %>
+                        </div>
+                        <button class="skiper-arrow skiper-next" type="button" aria-label="Next lakefront stays">
+                          <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                       </div>
                     </section>
                     <% } %>

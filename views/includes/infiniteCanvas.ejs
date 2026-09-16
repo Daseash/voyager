@@ -1,0 +1,47 @@
+<div class="skiper73-canvas-wrapper" data-skiper73-canvas>
+  <!-- Vignette frame -->
+  <div class="skiper73-vignette"></div>
+
+  <!-- Subtle floating hint -->
+  <div class="skiper73-hint">
+    <i class="fa-solid fa-hand-pointer"></i> Drag in any direction to explore
+  </div>
+
+  <!-- The 2D World Plane -->
+  <div class="skiper73-plane"></div>
+
+  <!-- Data source templates (read by JS engine) -->
+  <div class="skiper73-templates" style="display: none;" aria-hidden="true">
+    <% const staySource = (typeof allListings !== 'undefined' && allListings && allListings.length > 0) ? allListings : ((typeof listings !== 'undefined' && listings) ? listings : []); %>
+    <% staySource.forEach(listing => { %>
+      <div class="skiper73-tile-data"
+        data-id="<%= listing._id %>"
+        data-url="/listings/<%= listing._id %>"
+        data-title="<%= listing.title %>"
+        data-location="<%= listing.location %>"
+        data-country="<%= listing.country %>"
+        data-price="<%= listing.price ? listing.price.toLocaleString('en-IN') : '0' %>"
+        data-rating="<%= listing._avgRating || '' %>"
+        data-category="<%= listing.category || '' %>"
+        data-image="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=60') %>">
+      </div>
+    <% }); %>
+  </div>
+
+  <!-- Minimal HUD Controls -->
+  <div class="skiper73-hud">
+    <button type="button" class="skiper73-btn" data-skiper73-action="zoom-in" title="Zoom In" aria-label="Zoom In">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <button type="button" class="skiper73-btn" data-skiper73-action="zoom-out" title="Zoom Out" aria-label="Zoom Out">
+      <i class="fa-solid fa-minus"></i>
+    </button>
+    <div class="skiper73-hud-divider"></div>
+    <button type="button" class="skiper73-btn" data-skiper73-action="recenter" title="Recenter View" aria-label="Recenter View">
+      <i class="fa-solid fa-arrows-to-dot"></i>
+    </button>
+    <button type="button" class="skiper73-btn" data-skiper73-action="fullscreen" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+      <i class="fa-solid fa-expand"></i>
+    </button>
+  </div>
+</div>

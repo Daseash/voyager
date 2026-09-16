@@ -121,6 +121,7 @@ app.get(
 
     res.render("home.ejs", {
       featuredListings: allListings.slice(0, 8),
+      allListings,
       beachListings,
       viewListings,
       trendingListings,

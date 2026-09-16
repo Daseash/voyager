@@ -35,13 +35,24 @@
       <%- include('../includes/categories') %>
     </div>
     
-    <button type="button" class="filter-trigger-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
-      <i class="fa-solid fa-sliders"></i>
-      <span>Filters</span>
-      <% if (activeCount > 0) { %>
-        <span class="filter-count-badge"><%= activeCount %></span>
-      <% } %>
-    </button>
+    <div class="d-flex align-items-center gap-2">
+      <div class="btn-group view-toggle-group" role="group" aria-label="View mode">
+        <button type="button" class="btn btn-sm btn-outline-dark active" id="view-toggle-grid" title="Standard Grid View">
+          <i class="fa-solid fa-table-cells-large me-1"></i> <span class="d-none d-sm-inline">Grid</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-dark" id="view-toggle-canvas" title="Skiper 73 Infinite Canvas">
+          <i class="fa-solid fa-compass text-danger me-1"></i> <span class="d-none d-sm-inline">Canvas</span>
+        </button>
+      </div>
+
+      <button type="button" class="filter-trigger-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Filters</span>
+        <% if (activeCount > 0) { %>
+          <span class="filter-count-badge"><%= activeCount %></span>
+        <% } %>
+      </button>
+    </div>
   </div>
 
   <% if (hasPriceFilter) { %>
@@ -138,43 +149,88 @@
     </a>
   </div>
   <% } else { %>
-  <div class="listing-grid">
-    <% allListings.forEach((listing) => { %>
-    <div class="listing-card" data-category="<%= listing.category || 'trending' %>" data-kw="<%= (listing.title + ' ' + (listing.description||'') + ' ' + (listing.location||'') + ' ' + (listing.country||'')).toLowerCase() %>">
-      <a href="/listings/<%= listing._id %>" class="card-link">
-        <div class="card-media">
-          <img
-            src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
-            alt="<%= listing.title %>"
-            loading="lazy"
-          />
-        </div>
-        <div class="card-body">
-          <div class="card-row">
-            <h3 class="card-title"><%= listing.location %>, <%= listing.country %></h3>
-            <% if (listing._avgRating) { %>
-            <span class="card-rating"><i class="fa-solid fa-star"></i> <%= listing._avgRating.toFixed(1) %></span>
-            <% } else { %>
-            <span class="card-rating card-rating--new">New</span>
-            <% } %>
-          </div>
-          <p class="card-subtitle"><%= listing.title %></p>
-          <p class="card-price">
-            &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
-            <span>/ night</span>
-          </p>
-        </div>
-      </a>
-      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-      <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <button type="submit" class="wishlist-btn <%= wl.has(String(listing._id)) ? 'active' : '' %>" aria-label="Toggle wishlist">
-          <i class="fa-<%= wl.has(String(listing._id)) ? 'solid' : 'regular' %> fa-heart"></i>
-        </button>
-      </form>
-      <% } %>
-    </div>
-    <% }); %>
+  <!-- Infinite Canvas View (Skiper 73) -->
+  <div id="canvas-view-container" style="display: none; margin-bottom: 2.5rem;">
+    <%- include('../includes/infiniteCanvas', { allListings: allListings }) %>
   </div>
+
+  <!-- Standard Grid View -->
+  <div id="grid-view-container">
+    <div class="listing-grid">
+      <% allListings.forEach((listing) => { %>
+      <div class="listing-card" data-category="<%= listing.category || 'trending' %>" data-kw="<%= (listing.title + ' ' + (listing.description||'') + ' ' + (listing.location||'') + ' ' + (listing.country||'')).toLowerCase() %>">
+        <a href="/listings/<%= listing._id %>" class="card-link">
+          <div class="card-media">
+            <img
+              src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
+              alt="<%= listing.title %>"
+              loading="lazy"
+            />
+          </div>
+          <div class="card-body">
+            <div class="card-row">
+              <h3 class="card-title"><%= listing.location %>, <%= listing.country %></h3>
+              <% if (listing._avgRating) { %>
+              <span class="card-rating"><i class="fa-solid fa-star"></i> <%= listing._avgRating.toFixed(1) %></span>
+              <% } else { %>
+              <span class="card-rating card-rating--new">New</span>
+              <% } %>
+            </div>
+            <p class="card-subtitle"><%= listing.title %></p>
+            <p class="card-price">
+              &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
+              <span>/ night</span>
+            </p>
+          </div>
+        </a>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <button type="submit" class="wishlist-btn <%= wl.has(String(listing._id)) ? 'active' : '' %>" aria-label="Toggle wishlist">
+            <i class="fa-<%= wl.has(String(listing._id)) ? 'solid' : 'regular' %> fa-heart"></i>
+          </button>
+        </form>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const btnGrid = document.getElementById('view-toggle-grid');
+      const btnCanvas = document.getElementById('view-toggle-canvas');
+      const gridContainer = document.getElementById('grid-view-container');
+      const canvasContainer = document.getElementById('canvas-view-container');
+
+      function setView(mode) {
+        if (mode === 'canvas') {
+          if (gridContainer) gridContainer.style.display = 'none';
+          if (canvasContainer) {
+            canvasContainer.style.display = 'block';
+            const canvasEl = canvasContainer.querySelector('[data-skiper73-canvas]');
+            if (canvasEl && window.initSkiper73Canvas) {
+              window.initSkiper73Canvas(canvasEl);
+            }
+          }
+          if (btnCanvas) btnCanvas.classList.add('active');
+          if (btnGrid) btnGrid.classList.remove('active');
+        } else {
+          if (canvasContainer) canvasContainer.style.display = 'none';
+          if (gridContainer) gridContainer.style.display = 'block';
+          if (btnGrid) btnGrid.classList.add('active');
+          if (btnCanvas) btnCanvas.classList.remove('active');
+        }
+      }
+
+      if (btnGrid) btnGrid.addEventListener('click', () => setView('grid'));
+      if (btnCanvas) btnCanvas.addEventListener('click', () => setView('canvas'));
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'canvas' || window.location.hash === '#canvas' || window.location.hash === '#infinite-canvas') {
+        setView('canvas');
+      }
+    })();
+  </script>
   <% } %>
 </div>

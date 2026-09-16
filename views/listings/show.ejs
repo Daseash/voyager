@@ -344,42 +344,50 @@
         >Show all stays <i class="fa-solid fa-arrow-right"></i
       ></a>
     </div>
-    <div class="listing-grid">
-      <% similarListings.forEach((item) => { %>
-      <div class="listing-card">
-        <a href="/listings/<%= item._id %>" class="card-link">
-          <div class="card-media">
-            <img
-              src="<%= item.image.url %>"
-              alt="<%= item.title %>"
-              loading="lazy"
-            />
-          </div>
-          <div class="card-body">
-            <div class="card-row">
-              <h3 class="card-title"><%= item.location %>, <%= item.country %></h3>
-              <% if (item._avgRating) { %>
-              <span class="card-rating"><i class="fa-solid fa-star"></i> <%= item._avgRating.toFixed(1) %></span>
-              <% } else { %>
-              <span class="card-rating card-rating--new">New</span>
-              <% } %>
+    <div class="skiper-scroll-wrapper">
+      <button class="skiper-arrow skiper-prev is-hidden" type="button" aria-label="Previous stays">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <div class="skiper-scroll" data-skiper-scroll>
+        <% similarListings.forEach((item) => { %>
+        <div class="listing-card">
+          <a href="/listings/<%= item._id %>" class="card-link">
+            <div class="card-media">
+              <img
+                src="<%= item.image.url %>"
+                alt="<%= item.title %>"
+                loading="lazy"
+              />
             </div>
-            <p class="card-subtitle"><%= item.title %></p>
-            <p class="card-price">
-              &#8377;<%= item.price.toLocaleString("en-IN") %> <span>/ night</span>
-            </p>
-          </div>
-        </a>
-        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <form method="post" action="/wishlist/<%= item._id %>/toggle" class="wishlist-form">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
-            <i class="fa-regular fa-heart"></i>
-          </button>
-        </form>
-        <% } %>
+            <div class="card-body">
+              <div class="card-row">
+                <h3 class="card-title"><%= item.location %>, <%= item.country %></h3>
+                <% if (item._avgRating) { %>
+                <span class="card-rating"><i class="fa-solid fa-star"></i> <%= item._avgRating.toFixed(1) %></span>
+                <% } else { %>
+                <span class="card-rating card-rating--new">New</span>
+                <% } %>
+              </div>
+              <p class="card-subtitle"><%= item.title %></p>
+              <p class="card-price">
+                &#8377;<%= item.price.toLocaleString("en-IN") %> <span>/ night</span>
+              </p>
+            </div>
+          </a>
+          <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <form method="post" action="/wishlist/<%= item._id %>/toggle" class="wishlist-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </form>
+          <% } %>
+        </div>
+        <% }); %>
       </div>
-      <% }); %>
+      <button class="skiper-arrow skiper-next" type="button" aria-label="Next stays">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
     </div>
   </section>
   <% } %>
