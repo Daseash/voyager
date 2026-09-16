@@ -36,12 +36,31 @@ app.use(
 // View Engine Setup
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.resolve(process.cwd(), "views"));
+
+// Database auto-connection for serverless environments (e.g. Vercel)
+let isConnected = false;
+app.use(async (req, res, next) => {
+  if (!isConnected && mongoose.connection.readyState === 0) {
+    const dbUrl = process.env.ATLASDB_URL || process.env.DB_URL;
+    if (dbUrl) {
+      try {
+        await mongoose.connect(dbUrl, {
+          serverSelectionTimeoutMS: 5000,
+        });
+        isConnected = true;
+      } catch (err) {
+        console.error("MongoDB connection notice:", err.message);
+      }
+    }
+  }
+  next();
+});
 
 // Body Parser & Static Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.resolve(process.cwd(), "public")));
 app.use(cookieParser(process.env.SESSION_SECRET || "wanderlustsecretkey"));
 
 // Session Middleware & Cookie Options Configuration
@@ -100,8 +119,24 @@ const { attachRatings } = require("./utils/rating.js");
 app.get(
   "/",
   wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({}).lean();
-    await attachRatings(allListings);
+    let allListings = [];
+    try {
+      if (mongoose.connection.readyState === 1) {
+        allListings = await Listing.find({}).lean();
+        await attachRatings(allListings);
+      }
+    } catch (dbErr) {
+      console.warn("Could not query listings from MongoDB:", dbErr.message);
+    }
+
+    if (!allListings || allListings.length === 0) {
+      try {
+        const sampleData = require("./init/data.js");
+        allListings = (sampleData && sampleData.data) ? [...sampleData.data] : [];
+      } catch (err) {
+        allListings = [];
+      }
+    }
 
     const matchCategory = (cat, rx) =>
       allListings.filter(
