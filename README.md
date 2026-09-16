@@ -69,3 +69,16 @@
    ```bash
    git clone [https://github.com/Daseash/MY-First-CRUD-PRoject.git](https://github.com/Daseash/MY-First-CRUD-PRoject.git)
    cd MY-First-CRUD-PRoject
+MY-First-Project/
+├── controllers/       # Route callback logic & business logic
+├── init/              # Database initialization & sample seed data
+├── models/            # Mongoose schemas & data models
+├── public/            # Static assets (CSS, client JS, images)
+├── rag/               # Vector store & RAG pipeline integration
+├── routes/            # Express route definitions
+├── utils/             # Express error handlers & helper wrappers
+├── views/             # EJS templates & UI components
+├── app.js             # Main application entry point
+├── cloudConfig.js     # Cloudinary SDK configuration
+├── middleware.js      # Custom Express middleware (auth, validation)
+└── package.json       # Project dependencies and metadata
