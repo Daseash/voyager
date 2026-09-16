@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+mongoose.set("bufferCommands", false);
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const cookieParser = require("cookie-parser");
@@ -11,11 +12,19 @@ const LocalStrategy = require("passport-local");
 
 const User = require("./models/user.js");
 const Listing = require("./models/listing.js");
+const inMemoryStore = require("./utils/inMemoryStore.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 const { getSessionUserId, attachCsrf, csrfProtect } = require("./utils/auth.js");
 const ExpressError = require("./utils/ExpressError.js");
 
 const cors = require("cors");
+
+// Optional non-blocking MongoDB connection
+if (process.env.ATLASDB_URL && mongoose.connection.readyState === 0) {
+  mongoose.connect(process.env.ATLASDB_URL, { serverSelectionTimeoutMS: 3000 }).catch((err) => {
+    console.warn("MongoDB not connected, operating in standalone in-memory mode:", err.message);
+  });
+}
 
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
@@ -37,25 +46,6 @@ app.use(
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.resolve(process.cwd(), "views"));
-
-// Database auto-connection for serverless environments (e.g. Vercel)
-let isConnected = false;
-app.use(async (req, res, next) => {
-  if (!isConnected && mongoose.connection.readyState === 0) {
-    const dbUrl = process.env.ATLASDB_URL || process.env.DB_URL;
-    if (dbUrl) {
-      try {
-        await mongoose.connect(dbUrl, {
-          serverSelectionTimeoutMS: 5000,
-        });
-        isConnected = true;
-      } catch (err) {
-        console.error("MongoDB connection notice:", err.message);
-      }
-    }
-  }
-  next();
-});
 
 // Body Parser & Static Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -100,7 +90,7 @@ app.use(async (req, res, next) => {
     res.locals.currentUser = req.user;
   } else {
     const uid = getSessionUserId(req) || (req.session && req.session.userId);
-    if (uid) {
+    if (uid && mongoose.connection.readyState === 1) {
       try {
         res.locals.currentUser = await User.findById(uid).select("-password").lean();
       } catch {
@@ -120,22 +110,19 @@ app.get(
   "/",
   wrapAsync(async (req, res) => {
     let allListings = [];
-    try {
-      if (mongoose.connection.readyState === 1) {
+    if (mongoose.connection.readyState === 1) {
+      try {
         allListings = await Listing.find({}).lean();
         await attachRatings(allListings);
+      } catch (dbErr) {
+        allListings = inMemoryStore.getListings();
       }
-    } catch (dbErr) {
-      console.warn("Could not query listings from MongoDB:", dbErr.message);
+    } else {
+      allListings = inMemoryStore.getListings();
     }
 
     if (!allListings || allListings.length === 0) {
-      try {
-        const sampleData = require("./init/data.js");
-        allListings = (sampleData && sampleData.data) ? [...sampleData.data] : [];
-      } catch (err) {
-        allListings = [];
-      }
+      allListings = inMemoryStore.getListings();
     }
 
     const matchCategory = (cat, rx) =>
