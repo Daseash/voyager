@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const listingController = require("../controllers/listings.js");
-const { validateListing, isLoggedIn, isOwner } = require("../middleware.js");
+const { validateListing, isLoggedIn, isOwner } = require("../middlewares");
 const { upload } = require("../cloudConfig.js");
 
 // Index (GET) and Create (POST) Routes

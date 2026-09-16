@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-const { requireLogin, csrfProtect } = require("../middleware.js");
+const { requireLogin, csrfProtect } = require("../middlewares");
 const wishlistController = require("../controllers/wishlist.js");
 
 // Wishlist Index Route

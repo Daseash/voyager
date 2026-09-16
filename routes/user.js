@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const wrapAsync = require("../utils/wrapAsync.js");
 const userController = require("../controllers/users.js");
-const { validateUser, saveRedirectUrl } = require("../middleware.js");
+const { validateUser, saveRedirectUrl } = require("../middlewares");
 
 // Signup Route (GET & POST)
 router
